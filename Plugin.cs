@@ -13,6 +13,8 @@ namespace TimeLimit
 
         private float timeRemaining;
 
+        private bool pluginEnabled = true;
+
         private bool gameStarted = false;
 
         private void Awake()
@@ -27,13 +29,13 @@ namespace TimeLimit
 
         private void Update()
         {
-            if(timeRemaining > 0 && gameStarted)
+            if(pluginEnabled && gameStarted && timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
 
                 Logger.LogInfo(timeRemaining);
             }
-            else if (timeRemaining <= 0 && gameStarted)
+            else if (pluginEnabled && gameStarted && timeRemaining <= 0)
             {
                 RestartGame();
 
@@ -73,11 +75,21 @@ namespace TimeLimit
         {
             if(SceneManager.GetActiveScene().name == "Loader")
             {
-                if(GUI.Button(new Rect(10, 10, 200, 100), "Test"))
+                if(GUI.Button(new Rect(10, 10, 200, 100), IsPluginEnabled()))
                 {
-                    Logger.LogInfo("Button Pressed");
+                    pluginEnabled = !pluginEnabled;
                 }
             }
+        }
+
+        private string IsPluginEnabled()
+        {
+            if(pluginEnabled)
+            {
+                return "Enabled";
+            }
+
+            return "Disabled";
         }
     }
 }
